@@ -1,120 +1,175 @@
 #include <stdio.h>
 
-#define MAX 100
+#define MAX_SIZE 10  
 
-void readspars(int spars[MAX][MAX], int rows, int cols) {
-    int i, j;
-    for(i = 0; i < rows; i++) {
-        for(j = 0; j < cols; j++) {
-            scanf("%d", &spars[i][j]);
+int main() {
+    int i, j, k = 1, q = 1, m1, n1, m2, n2;
+
+    
+    printf("Enter the rows & columns for Matrix A: ");
+    scanf("%d%d", &m1, &n1);
+
+    
+    printf("Enter the rows & columns for Matrix B: ");
+    scanf("%d%d", &m2, &n2);
+
+   
+    int A[MAX_SIZE][MAX_SIZE], B[MAX_SIZE * MAX_SIZE][3];
+    int C[MAX_SIZE][MAX_SIZE], D[MAX_SIZE * MAX_SIZE][3];
+    int result[MAX_SIZE * MAX_SIZE][3];
+
+    
+    printf("Enter the Matrix A:\n");
+    for (i = 0; i < m1; i++) {
+        for (j = 0; j < n1; j++) {
+            scanf("%d", &A[i][j]);
         }
     }
-}
 
-void sparsMatrix(int matrix[MAX][3], int rows, int cols, int spars[MAX][MAX]) {
-    int i, j, k = 1;  
-    for(i = 0; i < rows; i++) {
-        for(j = 0; j < cols; j++) {
-            if(spars[i][j] != 0) {
-                matrix[k][0] = i;
-                matrix[k][1] = j;
-                matrix[k][2] = spars[i][j];
-                k++;
-            }
+   
+    printf("Enter the Matrix B:\n");
+    for (i = 0; i < m2; i++) {
+        for (j = 0; j < n2; j++) {
+            scanf("%d", &C[i][j]);
         }
     }
-    matrix[0][0] = rows;
-    matrix[0][1] = cols;
-    matrix[0][2] = k - 1;  
-}
 
-void displaymatrix(int matrix[MAX][3], int rows) {
-    int i, j;
-    for(i = 0; i < rows; i++) {
-        for(j = 0; j < 3; j++) {
-            printf("%d\t", matrix[i][j]);
+    
+    printf("The Matrix A is:\n");
+    for (i = 0; i < m1; i++) {
+        for (j = 0; j < n1; j++) {
+            printf("%d\t", A[i][j]);
         }
         printf("\n");
     }
-}
 
-void addSparse(int a[MAX][3], int b[MAX][3], int result[MAX][3]) {
-    int i = 1, j = 1, k = 1;
-    if (a[0][0] != b[0][0] || a[0][1] != b[0][1]) {
-        printf("Matrix dimensions do not match for addition.\n");
-        result[0][2] = 0;
-        return;
-    }
     
-    result[0][0] = a[0][0];
-    result[0][1] = a[0][1];
+    printf("The Matrix B is:\n");
+    for (i = 0; i < m2; i++) {
+        for (j = 0; j < n2; j++) {
+            printf("%d\t", C[i][j]);
+        }
+        printf("\n");
+    }
 
-    while(i <= a[0][2] && j <= b[0][2]) {
-        if(a[i][0] < b[j][0] || (a[i][0] == b[j][0] && a[i][1] < b[j][1])) {
-            result[k][0] = a[i][0];
-            result[k][1] = a[i][1];
-            result[k][2] = a[i][2];
-            i++; k++;
-        }
-        else if(b[j][0] < a[i][0] || (b[j][0] == a[i][0] && b[j][1] < a[i][1])) {
-            result[k][0] = b[j][0];
-            result[k][1] = b[j][1];
-            result[k][2] = b[j][2];
-            j++; k++;
-        }
-        else {
-            int summed = a[i][2] + b[j][2];
-            if (summed != 0) {
-                result[k][0] = a[i][0];
-                result[k][1] = a[i][1];
-                result[k][2] = summed;
+    
+    B[0][0] = m1;
+    B[0][1] = n1;
+    B[0][2] = 0;  
+    for (i = 0; i < m1; i++) {
+        for (j = 0; j < n1; j++) {
+            if (A[i][j] != 0) {
+                B[k][0] = i;   
+                B[k][1] = j;   
+                B[k][2] = A[i][j];   
                 k++;
+                B[0][2]++;   
             }
-            i++; j++;
         }
     }
 
-    while(i <= a[0][2]) {
-        result[k][0] = a[i][0];
-        result[k][1] = a[i][1];
-        result[k][2] = a[i][2];
-        i++; k++;
+    
+    D[0][0] = m2;
+    D[0][1] = n2;
+    D[0][2] = 0;  
+    for (i = 0; i < m2; i++) {
+        for (j = 0; j < n2; j++) {
+            if (C[i][j] != 0) {
+                D[q][0] = i;   
+                D[q][1] = j;   
+                D[q][2] = C[i][j];   
+                q++;
+                D[0][2]++;   
+            }
+        }
     }
 
-    while(j <= b[0][2]) {
-        result[k][0] = b[j][0];
-        result[k][1] = b[j][1];
-        result[k][2] = b[j][2];
-        j++; k++;
+   
+    printf("The Sparse Matrix representation of A is:\n");
+    for (i = 0; i <= B[0][2]; i++) {  
+        printf("%d\t%d\t%d\n", B[i][0], B[i][1], B[i][2]);
     }
 
-    result[0][2] = k - 1;
-}
+    
+    printf("The Sparse Matrix representation of B is:\n");
+    for (i = 0; i <= D[0][2]; i++) { 
+        printf("%d\t%d\t%d\n", D[i][0], D[i][1], D[i][2]);
+    }
 
-int main() {
-    int spars1[MAX][MAX], spars2[MAX][MAX];
-    int matrix1[MAX][3], matrix2[MAX][3], result[MAX][3];
-    int rows, cols;
+    
+    int resultIndex = 1;  
+    for (i = 1; i <= B[0][2]; i++) { 
+        int found = 0;
+        for (j = 1; j <= D[0][2]; j++) {  
+            if (B[i][0] == D[j][0] && B[i][1] == D[j][1]) { 
+                result[resultIndex][0] = B[i][0];  
+                result[resultIndex][1] = B[i][1];  
+                result[resultIndex][2] = B[i][2] + D[j][2];  
+                resultIndex++;
+                found = 1;
+                break;
+            }
+        }
 
-    printf("Enter the number of rows of sparse matrices: ");
-    scanf("%d", &rows);
+        
+        if (!found) {
+            result[resultIndex][0] = B[i][0];
+            result[resultIndex][1] = B[i][1];
+            result[resultIndex][2] = B[i][2];
+            resultIndex++;
+        }
+    }
 
-    printf("Enter the number of columns of sparse matrices: ");
-    scanf("%d", &cols);
+    
+    for (j = 1; j <= D[0][2]; j++) {
+        int found = 0;
+        for (i = 1; i <= B[0][2]; i++) {
+            if (D[j][0] == B[i][0] && D[j][1] == B[i][1]) {
+                found = 1;
+                break;
+            }
+        }
+       
+        if (!found) {
+            result[resultIndex][0] = D[j][0];
+            result[resultIndex][1] = D[j][1];
+            result[resultIndex][2] = D[j][2];
+            resultIndex++;
+        }
+    }
 
-    printf("Enter the elements of the first sparse matrix:\n");
-    readspars(spars1, rows, cols);
+  
+    result[0][0] = m1;  
+    result[0][1] = n1;  
+    result[0][2] = resultIndex - 1;  
 
-    printf("Enter the elements of the second sparse matrix:\n");
-    readspars(spars2, rows, cols);
+    
+    printf("The Sparse Matrix representation of the addition result is:\n");
+ 
+    for (i = 0; i <= result[0][2]; i++) {
+        printf("%d\t%d\t%d\n", result[i][0], result[i][1], result[i][2]);
+    }
 
-    sparsMatrix(matrix1, rows, cols, spars1);
-    sparsMatrix(matrix2, rows, cols, spars2);
+    int transpose[MAX_SIZE * MAX_SIZE][3];
+    transpose[0][0] = result[0][1];  
+    transpose[0][1] = result[0][0];  
+    transpose[0][2] = result[0][2];  
 
-    addSparse(matrix1, matrix2, result);
+   
+    int transposeIndex = 1;
+    for (i = 1; i <= result[0][2]; i++) {
+        transpose[transposeIndex][0] = result[i][1];  
+        transpose[transposeIndex][1] = result[i][0];  
+        transpose[transposeIndex][2] = result[i][2];  
+        transposeIndex++;
+    }
 
-    printf("Resultant sparse matrix after addition:\n");
-    displaymatrix(result, result[0][2] + 1);
+    
+    printf("The Transpose of the Sparse Matrix is:\n");
+    for (i = 1; i <= transpose[0][2]; i++) {
+        printf("%d\t%d\t%d\n", transpose[i][0], transpose[i][1], transpose[i][2]);
+    }
+
 
     return 0;
 }

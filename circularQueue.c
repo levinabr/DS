@@ -1,80 +1,119 @@
-#include<stdio.h>
-#include<stdlib.h>
-#define max 5
-int queue[max];
-int front=-1,rear=-1;
-void enqueue(int value)
-{ 
-  if((front==0&&rear==max-1)||(rear+1)%max==front)
-  {
-    printf("Queue is full");
-    return ;
-  }
-  if(front==-1)
-  {
-    front=rear=0;
-   } 
-   else{
-   rear=(rear+1)%max;
-   }
-   queue[rear]=value;
-  }
-void dequeue()
-{
-  if(front==-1) 
-  {
-    printf("Queue is empty ");
-    return ;
-  }
-  printf("Deleted :%d",queue[front]);
-  if(front==rear)
-  {
-    front=rear=-1;
-  }
-  else
-  {
-    front=(front+1)%max;}
-   }
-   void display()
-   {
-   if(front==-1){
-   printf("Queue is empty ");
-   return ;}
-   printf("Queue :");
-   int i=front;
-   while(1){
-   printf("%d",queue[i]);
-   if(i==rear)
-   {
-   break;}
-   i=(i+1)%max;
-   }printf("\n");}
-   int main(){
-   int choice,value;
-   while(1)
-   {
-     printf("\n ---Circular Queue---\n");
-     printf("1.Enqueue\n2.Dequeue\n3.Display\n4.Exit");
-     printf("\nEnter your choice:");
-     scanf("%d",&choice);
-     switch(choice){
-     case 1:
-          printf("Enter the value:");
-          scanf("%d",&value);
-          enqueue(value);
-          break;
-    case 2:
-          dequeue();
-          break;
-    case 3:
-          display();
-          break;
-    case 4:
-          exit(0);
-          break;
-    default:
-          printf("Invalid Choice");
-          }
-         }
-         return 0;
-         }
+#include <stdio.h>
+#define MAX 5
+
+int queue[MAX];
+int front = -1;
+int rear = -1;
+
+// ------------------------------
+// INSERT (ENQUEUE)
+// ------------------------------
+void enqueue(int value) {
+
+    // Condition for full queue
+    if ((front == 0 && rear == MAX - 1) || (rear + 1) % MAX == front) {
+        printf("Queue is FULL!\n");
+        return;
+    }
+
+    // First element
+    if (front == -1) {
+        front = rear = 0;
+    }
+    else {
+        // move rear in circular manner
+        rear = (rear + 1) % MAX;
+    }
+
+    queue[rear] = value;
+    printf("Inserted %d\n", value);
+}
+
+// ------------------------------
+// DELETE (DEQUEUE)
+// ------------------------------
+void dequeue() {
+
+    if (front == -1) {
+        printf("Queue is EMPTY!\n");
+        return;
+    }
+
+    printf("Deleted: %d\n", queue[front]);
+
+    // If only one element left
+    if (front == rear) {
+        front = rear = -1;
+    }
+    else {
+        // move front in circular manner
+        front = (front + 1) % MAX;
+    }
+}
+
+// ------------------------------
+// DISPLAY
+// ------------------------------
+void display() {
+
+    if (front == -1) {
+        printf("Queue is EMPTY!\n");
+        return;
+    }
+
+    printf("Queue: ");
+
+    int i = front;
+
+    while (1) {
+        printf("%d ", queue[i]);
+
+        if (i == rear) break;  // stop after reaching last element
+
+        i = (i + 1) % MAX;  // move in circular manner
+    }
+
+    printf("\n");
+}
+
+// ------------------------------
+// MAIN FUNCTION
+// ------------------------------
+int main() {
+
+    int choice, value;
+
+    while (1) {
+
+        printf("\n--- Circular Queue Menu ---\n");
+        printf("1. Enqueue\n2. Dequeue\n3. Display\n4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+
+        case 1:
+            printf("Enter value: ");
+            scanf("%d", &value);
+            enqueue(value);
+            break;
+
+        case 2:
+            dequeue();
+            break;
+
+        case 3:
+            display();
+            break;
+
+        case 4:
+            printf("Exiting...\n");
+            return 0;
+
+        default:
+            printf("Invalid choice!\n");
+        }
+    }
+
+    return 0;
+}
